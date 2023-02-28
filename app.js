@@ -59,5 +59,19 @@ const path = require('path');
 // })
 
 
+fs.readdir(path.join('mainFolder'), {withFileTypes: true}, (err, files) => {
+    if (err) throw new Error(err.message)
+
+    files.forEach(file => {
+        if (file.isFile()) {
+            console.log(`FILE : ${file.name}`)
+        }else {
+            console.log(`FOLDER : ${file.name}`)
+        }
+    });
+
+});
+
+
 
 

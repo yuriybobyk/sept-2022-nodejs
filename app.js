@@ -1,87 +1,92 @@
-const fs = require('node:fs');
-const path = require('node:path');
-
 const express = require('express');
+const service = require('./services')
 
 const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}))
 
-const users = [
-    {
-        name: 'Oleh',
-        age: 19,
-        gender: 'male'
-    },
-    {
-        name: 'Anton',
-        age: 22,
-        gender: 'female'
-    },
-    {
-        name: 'Anya',
-        age: 25,
-        gender: 'female'
-    },
-    {
-        name: 'Elizavetta',
-        age: 35,
-        gender: 'female'
-    },
-    {
-        name: 'Cocos',
-        age: 70,
-        gender: 'mixed'
-    }
-]
 
 const PORT = 5000;
 
-app.listen(PORT, ()=>{
+app.listen(PORT, () => {
     console.log(`Server has started well on PORT: ${PORT}`)
 })
 
-app.get('/users', (req, res)=>{
+app.get('/users', async (req, res) => {
+    const users = await service.reader();
     res.json(users)
 })
 
-app.get('/users/:userId', (req, res)=>{
+app.get('/users/:userId', async (req, res) => {
 
-    const {userId}=req.params;
-    const user = users[+userId-1];
-
-    res.json(user)
-
-})
-
-app.post('/users', (req, res)=>{
-    const body = req.body;
-    users.push(body)
-
-    res.json({
-        message: 'user created'
-    })
-})
-
-app.put('/users/:userId', (req, res)=>{
     const {userId} = req.params;
-    const updatedUser = req.body;
+    const users = await service.reader()
+    const user = users.find((user)=> user.id === +userId);
 
-    users[+userId] = updatedUser;
-
-    res.json({
-        message: 'User updated',
-        data: users[+userId]
-    })
+    if (!user){
+        return res.status(422).json(`User ${userId} doesn't  exist`)
+    }
+    res.json(user)
 })
 
-app.delete('/users/:userId', (req, res)=>{
-    const {userId}=req.params
+app.post('/users', async (req, res) => {
+    const {name, age, gender} = req.body;
+    if (!name || name.length < 2){
+        res.status(400).json('Name should be longer then 2 letters')
+    }
+    if (!age || !Number.isInteger(age) || Number.isNaN(age)) {
+        res.status(400).json('Age should be number and not empty');
+    }
+    if (!gender || (gender !=='male' && gender !=='female')){
+        res.status(400).json('gender should be male or female')
+    }
 
-    users.splice(+userId, 1);
+    const users = await service.reader();
+    const newUser = {id: users[users.length-1]?.id + 1 || 1, name, age, gender};
 
-    res.json({
-        message: 'user deleted'
-    })
+    users.push(newUser);
+    await service.writer(users);
+    res.status(201).json(newUser)
+})
+
+app.put('/users/:userId', async (req, res) => {
+    const {userId} = req.params;
+    const {name, age, gender} = req.body;
+
+    if (!name || name.length < 2){
+        res.status(400).json('Name should be longer then 2 letters')
+    }
+    if (!age || !Number.isInteger(age) || Number.isNaN(age)) {
+        res.status(400).json('Age should be number and not empty');
+    }
+    if (!gender || (gender !=='male' && gender !=='female')){
+        res.status(400).json('gender should be male or female')
+    }
+
+    const users = await service.reader();
+    const index = users.findIndex((user)=>user.id === +userId);
+
+    if (index === -1){
+        res.status(422).json(`User ${userId} doesn't exist`)
+    }
+
+    users[index] = {...users[index], ...req.body};
+
+    await service.writer(users);
+    res.status(201).json(users[index])
+})
+
+app.delete('/users/:userId', async (req, res) => {
+    const {userId} = req.params
+
+    const users = await service.reader();
+    const index = users.findIndex((user)=>user.id === +userId);
+    if (index === -1){
+        res.status(422).json(`User ${userId} doesn't exist`)
+    }
+
+    users.splice(index, 1);
+    await service.writer(users);
+    res.sendStatus(204)
 })

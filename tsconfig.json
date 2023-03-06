@@ -9,6 +9,7 @@
     "allowSyntheticDefaultImports": true,                /* Allow 'import x from y' when a module doesn't have a default export. */
     "removeComments": true,                              /* Disable emitting comments. */
     "noImplicitAny": true,                               /* Enable error reporting for expressions and declarations with an implied `any` type.. */
-    "noUnusedLocals": true,                              /* Enable error reporting when a local variables aren't read. */
+    "noUnusedLocals": true ,
+    "skipLibCheck": true
   }
 }

@@ -2,26 +2,33 @@ import express, { Request, Response } from "express";
 import * as mongoose from "mongoose";
 
 import { User } from "./models/User.model";
+import { IUser } from "./types/user.types";
 
 const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.get("/users", async (req: Request, res: Response) => {
-  const users = await User.find();
+app.get(
+  "/users",
+  async (req: Request, res: Response): Promise<Response<IUser[]>> => {
+    const users = await User.find();
 
-  res.json(users);
-});
+    return res.json(users);
+  }
+);
 
-app.get("/users/:userId", async (req, res) => {
-  const { userId } = req.params;
-  const user = await User.findById(userId);
+app.get(
+  "/users/:userId",
+  async (req: Request, res: Response): Promise<Response<IUser>> => {
+    const { userId } = req.params;
+    const user = await User.findById(userId);
 
-  res.json(user);
-});
+    return res.json(user);
+  }
+);
 
-app.post("/users", async (req, res) => {
+app.post("/users", async (req: Request, res: Response) => {
   const body = req.body;
   const user = await User.create({ ...body });
 
@@ -31,7 +38,7 @@ app.post("/users", async (req, res) => {
   });
 });
 //
-app.put("/users/:userId", async (req, res) => {
+app.put("/users/:userId", async (req: Request, res: Response) => {
   const { userId } = req.params;
   const user = req.body;
 
@@ -43,7 +50,7 @@ app.put("/users/:userId", async (req, res) => {
   });
 });
 //
-app.delete("/users/:userId", async (req, res) => {
+app.delete("/users/:userId", async (req: Request, res: Response) => {
   const { userId } = req.params;
 
   await User.deleteOne({ _id: userId });
@@ -53,7 +60,7 @@ app.delete("/users/:userId", async (req, res) => {
   });
 });
 
-app.get("/welcome", (req, res) => {
+app.get("/welcome", (req: Request, res: Response) => {
   res.send("WELCOME");
 });
 

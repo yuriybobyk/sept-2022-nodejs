@@ -57,12 +57,12 @@ app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
 app.get("/users", async (req, res) => {
   const users = await User_model_1.User.find();
-  res.json(users);
+  return res.json(users);
 });
 app.get("/users/:userId", async (req, res) => {
   const { userId } = req.params;
   const user = await User_model_1.User.findById(userId);
-  res.json(user);
+  return res.json(user);
 });
 app.post("/users", async (req, res) => {
   const body = req.body;

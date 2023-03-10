@@ -11,7 +11,11 @@ router.get(
   user_middleware_1.userMiddleWare.getByIdAndThrow,
   user_controller_1.userController.getById
 );
-router.post("/", user_controller_1.userController.create);
+router.post(
+  "/",
+  user_middleware_1.userMiddleWare.isCreatedUserValid,
+  user_controller_1.userController.create
+);
 router.put("/:userId", user_controller_1.userController.update);
 router.delete("/:userId", user_controller_1.userController.deleteById);
 exports.userRouter = router;

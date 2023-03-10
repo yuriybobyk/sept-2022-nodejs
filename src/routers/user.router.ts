@@ -9,7 +9,7 @@ router.get("/", userController.getAll);
 
 router.get("/:userId", userMiddleWare.getByIdAndThrow, userController.getById);
 
-router.post("/", userController.create);
+router.post("/", userMiddleWare.isCreatedUserValid, userController.create);
 
 router.put("/:userId", userController.update);
 router.delete("/:userId", userController.deleteById);

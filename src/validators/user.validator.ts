@@ -22,7 +22,8 @@ export class UserValidator {
   });
 
   static updateUser = Joi.object({
-    name: this.name,
+    name: this.userName,
     gender: this.gender,
+    age: this.age,
   });
 }

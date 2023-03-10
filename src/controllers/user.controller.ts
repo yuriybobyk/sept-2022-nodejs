@@ -60,7 +60,7 @@ class UserController {
 
       const updatedUser = await User.updateOne({ _id: userId }, user);
 
-      return res.status(200).json({
+      return res.status(201).json({
         message: "User updated",
         data: updatedUser,
       });
@@ -78,7 +78,7 @@ class UserController {
 
       await User.deleteOne({ _id: userId });
 
-      return res.status(200).json({
+      return res.status(204).json({
         message: "User deleted",
       });
     } catch (e) {

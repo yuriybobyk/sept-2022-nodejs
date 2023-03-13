@@ -1,11 +1,11 @@
 # Editor directories and files
-.idea
-sept-2022-nodejs.iml
+/.idea
+/sept-2022-nodejs.iml
 
 # Node artifact files
-node_modules/
-dist/
+/node_modules/
+/dist
 
 # Environment variables
-.env
-.env.*
+/.env
+/.env.*

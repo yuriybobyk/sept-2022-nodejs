@@ -22,6 +22,9 @@ const userSchema = new Schema(
       type: String,
       enum: EGenders,
     },
+    age: {
+      type: Number,
+    },
   },
   {
     versionKey: false,

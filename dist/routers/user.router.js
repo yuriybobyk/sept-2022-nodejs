@@ -8,25 +8,25 @@ const router = (0, express_1.Router)();
 router.get("/", user_controller_1.userController.getAll);
 router.get(
   "/:userId",
-  user_middleware_1.userMiddleWare.isUserIdValid,
+  user_middleware_1.userMiddleWare.isIdValid,
   user_middleware_1.userMiddleWare.getByIdAndThrow,
   user_controller_1.userController.getById
 );
 router.post(
   "/",
-  user_middleware_1.userMiddleWare.isCreatedUserValid,
+  user_middleware_1.userMiddleWare.isCreatedValid,
   user_controller_1.userController.create
 );
 router.put(
   "/:userId",
-  user_middleware_1.userMiddleWare.isUserIdValid,
-  user_middleware_1.userMiddleWare.isUpdatedUserValid,
+  user_middleware_1.userMiddleWare.isIdValid,
+  user_middleware_1.userMiddleWare.isUpdatedValid,
   user_middleware_1.userMiddleWare.getByIdAndThrow,
   user_controller_1.userController.update
 );
 router.delete(
   "/:userId",
-  user_middleware_1.userMiddleWare.isUserIdValid,
+  user_middleware_1.userMiddleWare.isIdValid,
   user_middleware_1.userMiddleWare.getByIdAndThrow,
   user_controller_1.userController.deleteById
 );

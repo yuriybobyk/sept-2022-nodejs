@@ -3,6 +3,7 @@ import { isObjectIdOrHexString } from "mongoose";
 
 import { ApiError } from "../errors/api.error";
 import { User } from "../models/User.model";
+import { IRequest } from "../types/common.types";
 import { UserValidator } from "../validators";
 
 class UserMiddleware {
@@ -26,7 +27,56 @@ class UserMiddleware {
     }
   }
 
-  public async isCreatedUserValid(
+  public getDynamicallyAndThrow(
+    fieldName: string,
+    from = "body",
+    dbField = fieldName
+  ) {
+    return async (req: IRequest, res: Response, next: NextFunction) => {
+      try {
+        const fieldValue = req[from][fieldName];
+
+        const user = await User.findOne({ [dbField]: fieldValue });
+
+        if (user) {
+          throw new ApiError(
+            `user with ${fieldName} ${fieldValue} already exist`,
+            422
+          );
+        }
+
+        next();
+      } catch (e) {
+        next(e);
+      }
+    };
+  }
+
+  public getDynamicallyOrThrow(
+    fieldName: string,
+    from = "body",
+    dbField = fieldName
+  ) {
+    return async (req: IRequest, res: Response, next: NextFunction) => {
+      try {
+        const fieldValue = req[from][fieldName];
+
+        const user = await User.findOne({ [dbField]: fieldValue });
+
+        if (!user) {
+          throw new ApiError(`user not found`, 422);
+        }
+
+        req.res.locals = user;
+
+        next();
+      } catch (e) {
+        next(e);
+      }
+    };
+  }
+
+  public async isCreatedValid(
     req: Request,
     res: Response,
     next: NextFunction
@@ -44,7 +94,7 @@ class UserMiddleware {
     }
   }
 
-  public async isUserIdValid(
+  public async isIdValid(
     req: Request,
     res: Response,
     next: NextFunction
@@ -60,7 +110,7 @@ class UserMiddleware {
     }
   }
 
-  public async isUpdatedUserValid(
+  public async isUpdatedValid(
     req: Request,
     res: Response,
     next: NextFunction
@@ -72,6 +122,23 @@ class UserMiddleware {
         throw new ApiError(error.message, 400);
       }
       req.body = value;
+      next();
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  public async isLoginValid(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const { error } = UserValidator.loginUser.validate(req.body);
+
+      if (error) {
+        throw new ApiError(error.message, 400);
+      }
       next();
     } catch (e) {
       next(e);

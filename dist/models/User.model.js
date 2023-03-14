@@ -29,6 +29,7 @@ const userSchema = new mongoose_1.Schema(
   },
   {
     versionKey: false,
+    timestamps: true,
   }
 );
 exports.User = (0, mongoose_1.model)("user", userSchema);

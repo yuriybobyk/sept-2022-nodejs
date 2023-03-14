@@ -9,23 +9,23 @@ router.get("/", userController.getAll);
 
 router.get(
   "/:userId",
-  userMiddleWare.isUserIdValid,
+  userMiddleWare.isIdValid,
   userMiddleWare.getByIdAndThrow,
   userController.getById
 );
 
-router.post("/", userMiddleWare.isCreatedUserValid, userController.create);
+router.post("/", userMiddleWare.isCreatedValid, userController.create);
 
 router.put(
   "/:userId",
-  userMiddleWare.isUserIdValid,
-  userMiddleWare.isUpdatedUserValid,
+  userMiddleWare.isIdValid,
+  userMiddleWare.isUpdatedValid,
   userMiddleWare.getByIdAndThrow,
   userController.update
 );
 router.delete(
   "/:userId",
-  userMiddleWare.isUserIdValid,
+  userMiddleWare.isIdValid,
   userMiddleWare.getByIdAndThrow,
   userController.deleteById
 );

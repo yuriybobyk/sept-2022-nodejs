@@ -1,12 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.userController = void 0;
-const User_model_1 = require("../models/User.model");
-const user_service_1 = require("../services/user.service");
+const models_1 = require("../models");
+const services_1 = require("../services");
 class UserController {
   async getAll(req, res, next) {
     try {
-      const users = await user_service_1.userService.getAll();
+      const users = await services_1.userService.getAll();
       return res.json(users);
     } catch (e) {
       next(e);
@@ -15,7 +15,7 @@ class UserController {
   async getById(req, res, next) {
     try {
       const { userId } = req.params;
-      const user = await user_service_1.userService.getById(userId);
+      const user = await services_1.userService.getById(userId);
       return res.json(user);
     } catch (e) {
       next(e);
@@ -24,7 +24,7 @@ class UserController {
   async create(req, res, next) {
     try {
       const body = req.body;
-      const user = await User_model_1.User.create({ ...body });
+      const user = await models_1.User.create({ ...body });
       return res.status(201).json({
         message: "User created!",
         data: user,
@@ -37,10 +37,7 @@ class UserController {
     try {
       const { userId } = req.params;
       const user = req.body;
-      const updatedUser = await User_model_1.User.updateOne(
-        { _id: userId },
-        user
-      );
+      const updatedUser = await models_1.User.updateOne({ _id: userId }, user);
       return res.status(201).json({
         message: "User updated",
         data: updatedUser,
@@ -52,7 +49,7 @@ class UserController {
   async deleteById(req, res, next) {
     try {
       const { userId } = req.params;
-      await User_model_1.User.deleteOne({ _id: userId });
+      await models_1.User.deleteOne({ _id: userId });
       return res.status(204).json({
         message: "User deleted",
       });

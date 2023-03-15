@@ -1,7 +1,9 @@
-import { ApiError } from "../errors/api.error";
-import { Token } from "../models/Token.model";
-import { User } from "../models/User.model";
-import { ITokenPair } from "../types";
+import { Promise } from "mongoose";
+
+import { ApiError } from "../errors";
+import { Token } from "../models";
+import { User } from "../models";
+import { ITokenPair, ITokenPayload } from "../types";
 import { IUser } from "../types";
 import { ICredentials } from "../types/auth.types";
 import { passwordService } from "./password.service";
@@ -37,13 +39,34 @@ class AuthService {
 
       const tokenPair = tokenService.generateTokenPair({
         name: user.name,
-        id: user._id,
+        _id: user._id,
       });
 
       await Token.create({
         _user_id: user._id,
         ...tokenPair,
       });
+
+      return tokenPair;
+    } catch (e) {
+      throw new ApiError(e.message, e.status);
+    }
+  }
+
+  public async refresh(
+    tokenInfo: ITokenPair,
+    jwtPayload: ITokenPayload
+  ): Promise<ITokenPair> {
+    try {
+      const tokenPair = tokenService.generateTokenPair({
+        _id: jwtPayload._id,
+        name: jwtPayload.name,
+      });
+
+      await Promise.all([
+        Token.create({ _user_id: jwtPayload._id, ...tokenPair }),
+        Token.deleteOne({ refreshToken: tokenInfo.refreshToken }),
+      ]);
 
       return tokenPair;
     } catch (e) {

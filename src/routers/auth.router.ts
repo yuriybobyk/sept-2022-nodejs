@@ -22,5 +22,6 @@ router.post(
   authMiddleWare.checkRefreshToken,
   authController.refresh
 );
+router.post("/login");
 
 export const authRouter = router;

@@ -21,13 +21,9 @@ class AuthController {
     try {
       const { email, password } = req.body;
       const { user } = req.res.locals;
-      const tokenPair = await authService.login(
-        {
-          email,
-          password,
-        },
-        user
-      );
+
+      const tokenPair = await authService.login({ email, password }, user);
+
       return res.status(200).json(tokenPair);
     } catch (e) {
       next(e);
@@ -41,7 +37,9 @@ class AuthController {
   ): Promise<Response<ITokenPair>> {
     try {
       const { tokenInfo, jwtPayload } = req.res.locals;
+
       const tokenPair = await authService.refresh(tokenInfo, jwtPayload);
+
       return res.status(200).json(tokenPair);
     } catch (e) {
       next(e);

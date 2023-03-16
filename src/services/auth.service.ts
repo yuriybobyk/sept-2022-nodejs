@@ -1,5 +1,3 @@
-import { Promise } from "mongoose";
-
 import { ApiError } from "../errors";
 import { Token } from "../models";
 import { User } from "../models";
@@ -38,8 +36,8 @@ class AuthService {
       }
 
       const tokenPair = tokenService.generateTokenPair({
-        name: user.name,
         _id: user._id,
+        name: user.name,
       });
 
       await Token.create({

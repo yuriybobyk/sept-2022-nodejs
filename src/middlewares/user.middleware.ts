@@ -3,6 +3,7 @@ import { isObjectIdOrHexString } from "mongoose";
 
 import { ApiError } from "../errors";
 import { User } from "../models";
+import { IUser } from "../types";
 import { UserValidator } from "../validators";
 
 class UserMiddleware {
@@ -55,7 +56,7 @@ class UserMiddleware {
   public getDynamicallyOrThrow(
     fieldName: string,
     from: "body" | "query" | "params" = "body",
-    dbField = fieldName
+    dbField: keyof IUser = "email"
   ) {
     return async (req: Request, res: Response, next: NextFunction) => {
       try {
@@ -135,6 +136,23 @@ class UserMiddleware {
   ): Promise<void> {
     try {
       const { error } = UserValidator.loginUser.validate(req.body);
+
+      if (error) {
+        throw new ApiError(error.message, 400);
+      }
+      next();
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  public async isChangePasswordValid(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const { error } = UserValidator.changeUserPassword.validate(req.body);
 
       if (error) {
         throw new ApiError(error.message, 400);

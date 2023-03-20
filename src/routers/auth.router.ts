@@ -17,6 +17,13 @@ router.post(
   userMiddleWare.getDynamicallyOrThrow("email"),
   authController.login
 );
+
+router.post(
+  "/password/change",
+  userMiddleWare.isChangePasswordValid,
+  authMiddleWare.checkAccessToken,
+  authController.changePassword
+);
 router.post(
   "/refresh",
   authMiddleWare.checkRefreshToken,

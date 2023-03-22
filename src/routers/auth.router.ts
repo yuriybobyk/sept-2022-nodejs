@@ -1,26 +1,31 @@
 import { Router } from "express";
 
 import { authController } from "../controllers";
-import { authMiddleWare, userMiddleWare } from "../middlewares";
+import {
+  authMiddleWare,
+  commonMiddleware,
+  userMiddleWare,
+} from "../middlewares";
+import { UserValidator } from "../validators";
 
 const router = Router();
 
 router.post(
   "/register",
-  userMiddleWare.isCreatedValid,
+  commonMiddleware.isBodyValid(UserValidator.createUser),
   userMiddleWare.getDynamicallyAndThrow("email"),
   authController.register
 );
 router.post(
   "/login",
-  userMiddleWare.isLoginValid,
+  commonMiddleware.isBodyValid(UserValidator.loginUser),
   userMiddleWare.getDynamicallyOrThrow("email"),
   authController.login
 );
 
 router.post(
   "/password/change",
-  userMiddleWare.isChangePasswordValid,
+  commonMiddleware.isBodyValid(UserValidator.changeUserPassword),
   authMiddleWare.checkAccessToken,
   authController.changePassword
 );

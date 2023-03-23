@@ -84,14 +84,28 @@ class AuthService {
     oldPassword: string,
     newPassword: string
   ): Promise<void> {
-    const user = await User.findById(userId);
-    const isMatched = await passwordService.compare(oldPassword, user.password);
-    if (!isMatched) {
-      throw new ApiError("password not matching", 400);
-    }
+    try {
+      const user = await User.findById(userId);
+      const isMatched = await passwordService.compare(
+        oldPassword,
+        user.password
+      );
+      if (!isMatched) {
+        throw new ApiError("password not matching", 400);
+      }
 
-    const hashedNewPassword = await passwordService.hash(newPassword);
-    await User.updateOne({ _id: user._id }, { password: hashedNewPassword });
+      const hashedNewPassword = await passwordService.hash(newPassword);
+      await User.updateOne({ _id: user._id }, { password: hashedNewPassword });
+    } catch (e) {
+      throw new ApiError(e.message, e.status);
+    }
+  }
+
+  public async forgotPassword(user: IUser): Promise<void> {
+    try {
+    } catch (e) {
+      throw new ApiError(e.message, e.status);
+    }
   }
 }
 

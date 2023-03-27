@@ -23,6 +23,10 @@ const userSchema = new mongoose_1.Schema(
       type: String,
       enum: enums_1.EGenders,
     },
+    isActivated: {
+      type: Boolean,
+      default: false,
+    },
     age: {
       type: Number,
     },

@@ -5,7 +5,7 @@ export const allTemplates = {
     subject: "Hi, welcome to our world",
     templateName: "register",
   },
-  [EEmailActions.FPRGOT_PASSWORD]: {
+  [EEmailActions.FORGOT_PASSWORD]: {
     subject: "Follow the guide to update your password",
     templateName: "forgotPassword",
   },

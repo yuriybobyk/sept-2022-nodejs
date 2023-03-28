@@ -1,4 +1,4 @@
-import { EEmailActions } from "../enums/email.actions.enum";
+import { EEmailActions } from "../enums";
 
 export const allTemplates = {
   [EEmailActions.WELCOME]: {
@@ -8,5 +8,9 @@ export const allTemplates = {
   [EEmailActions.FORGOT_PASSWORD]: {
     subject: "Follow the guide to update your password",
     templateName: "forgotPassword",
+  },
+  [EEmailActions.ACTIVATE]: {
+    subject: "Activate!",
+    templateName: "activate",
   },
 };

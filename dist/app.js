@@ -52,6 +52,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const mongoose = __importStar(require("mongoose"));
 const configs_1 = require("./configs");
+const crons_1 = require("./crons");
 const routers_1 = require("./routers");
 const routers_2 = require("./routers");
 const app = (0, express_1.default)();
@@ -66,7 +67,8 @@ app.use((err, req, res, next) => {
     status,
   });
 });
-app.listen(configs_1.configs.PORT, () => {
-  mongoose.connect(configs_1.configs.DB_URL);
+app.listen(configs_1.configs.PORT, async () => {
+  await mongoose.connect(configs_1.configs.DB_URL);
+  (0, crons_1.cronRunner)();
   console.log(`Server has started on PORT ${configs_1.configs.PORT} 🚀🚀🚀`);
 });

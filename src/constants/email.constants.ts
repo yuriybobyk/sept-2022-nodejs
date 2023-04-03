@@ -13,4 +13,8 @@ export const allTemplates = {
     subject: "Activate!",
     templateName: "activate",
   },
+  [EEmailActions.REMINDER]: {
+    subject: "Reminder",
+    templateName: "reminder",
+  },
 };

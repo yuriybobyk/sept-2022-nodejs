@@ -7,6 +7,7 @@ const userSchema = new mongoose_1.Schema(
   {
     name: {
       type: String,
+      index: true,
     },
     email: {
       type: String,

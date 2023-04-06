@@ -1,6 +1,7 @@
-import { model, Schema } from "mongoose";
+import { Model, model, Schema } from "mongoose";
 
 import { EGenders, EUserStatus } from "../enums";
+import { IUser } from "../types";
 
 const userSchema = new Schema(
   {
@@ -38,4 +39,24 @@ const userSchema = new Schema(
   }
 );
 
-export const User = model("user", userSchema);
+interface IUserMathods {
+  nameWithAge(): void;
+}
+
+interface IUserModel extends Model<IUser, object, IUserMathods> {
+  findByName(name: string): Promise<IUser[]>;
+}
+
+userSchema.methods = {
+  nameWithAge() {
+    console.log("hello");
+  },
+};
+
+userSchema.statics = {
+  async findByName(name: string): Promise<IUser[]> {
+    return this.find({ name });
+  },
+};
+
+export const User = model<IUser, IUserModel>("user", userSchema);

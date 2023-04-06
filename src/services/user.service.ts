@@ -6,6 +6,7 @@ interface IPaginationResponse<T> {
   page: number;
   parPage: number;
   itemsCount: number;
+  itemsFound: number;
   data: T[];
 }
 
@@ -20,16 +21,35 @@ class UserService {
 
   public async getWithPagination(
     query: any
-  ): Promise<IPaginationResponse<IUser>> {
+  ): Promise<IPaginationResponse<any>> {
     try {
-      const data = await User.find(query);
+      const data = User.findByName("Yurii");
+      console.log(data);
+      const queryStr = JSON.stringify(query);
+      const queryObj = JSON.parse(
+        queryStr.replace(/\b(gte|lte|gt|lt)\b/, (match) => `$${match}`)
+      );
+
+      const {
+        page = 1,
+        limit = 5,
+        sortedBy = "createdAt",
+        ...searchObject
+      } = queryObj;
+      const skip = limit * (page - 1);
+      const users = await User.find(searchObject)
+        .limit(limit)
+        .skip(skip)
+        .sort(sortedBy);
+      const usersTotalCount = await User.count();
 
       return {
-        page: 1,
-        itemsCount: 1,
-        parPage: 1,
-        // @ts-ignore
-        data,
+        page: +page,
+        itemsCount: usersTotalCount,
+        parPage: +limit,
+        itemsFound: users.length,
+
+        data: users,
       };
     } catch (e) {
       throw new ApiError(e.message, e.status);

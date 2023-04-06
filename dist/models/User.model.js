@@ -38,4 +38,14 @@ const userSchema = new mongoose_1.Schema(
     timestamps: true,
   }
 );
+userSchema.methods = {
+  nameWithAge() {
+    console.log("hello");
+  },
+};
+userSchema.statics = {
+  async findByName(name) {
+    return this.find({ name });
+  },
+};
 exports.User = (0, mongoose_1.model)("user", userSchema);

@@ -11,7 +11,7 @@ class UserController {
     next: NextFunction
   ): Promise<Response<IUser[]>> {
     try {
-      const users = await userService.getAll();
+      const users = await userService.getWithPagination(req.query);
 
       return res.json(users);
     } catch (e) {

@@ -38,9 +38,12 @@ const userSchema = new mongoose_1.Schema(
     timestamps: true,
   }
 );
+userSchema.virtual("nameWithSurname").get(function () {
+  return `${this.name} Piatov`;
+});
 userSchema.methods = {
   nameWithAge() {
-    console.log("hello");
+    return `${this.name} is ${this.age} years old`;
   },
 };
 userSchema.statics = {

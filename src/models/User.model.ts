@@ -1,7 +1,7 @@
-import { Model, model, Schema } from "mongoose";
+import { model, Schema } from "mongoose";
 
 import { EGenders, EUserStatus } from "../enums";
-import { IUser } from "../types";
+import { IUser, IUserModel } from "../types";
 
 const userSchema = new Schema(
   {
@@ -39,17 +39,13 @@ const userSchema = new Schema(
   }
 );
 
-interface IUserMathods {
-  nameWithAge(): void;
-}
-
-interface IUserModel extends Model<IUser, object, IUserMathods> {
-  findByName(name: string): Promise<IUser[]>;
-}
+userSchema.virtual("nameWithSurname").get(function () {
+  return `${this.name} Piatov`;
+});
 
 userSchema.methods = {
   nameWithAge() {
-    console.log("hello");
+    return `${this.name} is ${this.age} years old`;
   },
 };
 

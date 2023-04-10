@@ -10,6 +10,13 @@ interface IPaginationResponse<T> {
   data: T[];
 }
 
+export interface IQuery {
+  page: string;
+  limit: string;
+  sortedBy: string;
+  [key: string]: string;
+}
+
 class UserService {
   public async getAll(): Promise<IUser[]> {
     try {
@@ -20,11 +27,9 @@ class UserService {
   }
 
   public async getWithPagination(
-    query: any
-  ): Promise<IPaginationResponse<any>> {
+    query: IQuery
+  ): Promise<IPaginationResponse<IUser>> {
     try {
-      const data = User.findByName("Yurii");
-      console.log(data);
       const queryStr = JSON.stringify(query);
       const queryObj = JSON.parse(
         queryStr.replace(/\b(gte|lte|gt|lt)\b/, (match) => `$${match}`)
@@ -40,7 +45,8 @@ class UserService {
       const users = await User.find(searchObject)
         .limit(limit)
         .skip(skip)
-        .sort(sortedBy);
+        .sort(sortedBy)
+        .lean();
       const usersTotalCount = await User.count();
 
       return {

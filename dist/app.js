@@ -60,6 +60,7 @@ app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
 app.use("/users", routers_2.userRouter);
 app.use("/auth", routers_1.authRouter);
+app.use("/cars", routers_1.carRouter);
 app.use((err, req, res, next) => {
   const status = err.status || 500;
   return res.status(status).json({
